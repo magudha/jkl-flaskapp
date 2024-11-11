@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>View Appointments - JKL Healthcare Services</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+    <style>
+        /* Container style for better form visibility */
+        .container {
+            max-width: 900px;
+            margin-top: 50px;
+            padding: 2rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 1.5rem;
+        }
+        .btn-secondary {
+            margin-bottom: 1rem;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .no-appointments {
+            text-align: center;
+            margin-top: 2rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back to Main Options Link -->
+        <a href="{{ url_for('views.main_options') }}" class="btn btn-secondary mb-3">Back to Main Options</a>
+
+        <h2>View Appointments</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-info" role="alert">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Appointment Table -->
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Caregiver</th>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment, caregiver, patient in appointments %}
+                <tr>
+                    <td>{{ caregiver.name }}</td>
+                    <td>{{ patient.name }}</td>
+                    <td>{{ appointment.date.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <!-- Edit and Delete Appointment Buttons -->
+                        <a href="{{ url_for('views.update_appointment', appointment_id=appointment.id) }}" 
+                           class="btn btn-warning btn-sm mr-2">Edit</a>
+                        <a href="{{ url_for('views.delete_appointment', appointment_id=appointment.id) }}" 
+                           class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this appointment?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- No Appointments Message -->
+        {% if not appointments %}
+            <p class="no-appointments">No appointments scheduled.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

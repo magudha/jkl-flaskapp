@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Schedule Appointment - JKL Healthcare Services</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+    <style>
+        /* Styling adjustments for a cleaner form layout */
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            padding: 2rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .back-link {
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back to Main Options Link -->
+        <a href="{{ url_for('views.main_options') }}" class="btn btn-secondary back-link">Back to Main Options</a>
+
+        <h2>Schedule Appointment</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-info" role="alert">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Appointment Scheduling Form -->
+        <form action="{{ url_for('views.schedule_appointments') }}" method="POST">
+            <!-- Caregiver Selection -->
+            <div class="form-group">
+                <label for="caregiver_id">Caregiver:</label>
+                <select class="form-control" id="caregiver_id" name="caregiver_id" required>
+                    <option value="" disabled selected>Select a caregiver</option>
+                    {% for caregiver in caregivers %}
+                    <option value="{{ caregiver.id }}">{{ caregiver.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Patient Selection -->
+            <div class="form-group">
+                <label for="patient_id">Patient:</label>
+                <select class="form-control" id="patient_id" name="patient_id" required>
+                    <option value="" disabled selected>Select a patient</option>
+                    {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Date Selection -->
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="date" name="date" required>
+            </div>
+
+            <!-- Schedule Appointment Button -->
+            <button type="submit" class="btn btn-primary">Schedule Appointment</button>
+        </form>
+    </div>
+</body>
+</html>

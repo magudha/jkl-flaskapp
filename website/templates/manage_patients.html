@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manage Patients - JKL Healthcare Services</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+    <style>
+        /* Custom styling for a clean, professional layout */
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 2rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 1.5rem;
+        }
+        .btn-back {
+            display: block;
+            margin-bottom: 1.5rem;
+        }
+        .table thead {
+            background-color: #343a40;
+            color: white;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+        }
+        .no-patients {
+            text-align: center;
+            color: #888;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Back to Main Options Link -->
+        <a href="{{ url_for('views.main_options') }}" class="btn btn-secondary btn-back">Back to Main Options</a>
+
+        <h2>Manage Patients</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-info" role="alert">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Patients Table -->
+        {% if patients %}
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Medical Records</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>{{ patient.name }}</td>
+                        <td>{{ patient.address }}</td>
+                        <td>{{ patient.medical_records }}</td>
+                        <td class="text-center">
+                            <!-- Delete Patient Button -->
+                            <a href="{{ url_for('views.delete_patient', patient_id=patient.id) }}" 
+                               class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this patient?')">
+                               Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <!-- No Patients Message -->
+            <p class="no-patients">No patients found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
